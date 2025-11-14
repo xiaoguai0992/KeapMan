@@ -32,7 +32,6 @@ def get_current_task_pcpu_offset(system_map_path):
                 return int(line.split(' ')[0], 16)
 
 def get_symbol_addr(symbol_name, system_map_path):
-    # ffffffff81438aa0 T _copy_from_user
     with open(system_map_path, 'r') as f:
         for line in f.readlines():
             addr, _, name = line.strip().split(' ')[:3]
@@ -85,7 +84,6 @@ def exec_sync_stdout(cmd, timeout=60, echo=False):
 def kill_existing_qemu():
     try:
         uid = os.getuid()
-        # The regular expression matches both "qemu-system-x86_64" and "hostfwd=tcp::10437-:22"
         pattern = f"qemu-system-x86_64.*hostfwd=tcp::{QEMU_SSH_PORT}-:22"
         result = subprocess.run(
             ["pgrep", "-u", str(uid), "-f", pattern],
@@ -183,7 +181,6 @@ def k2uline(Config, alloc_site, free_site):
 
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    # client.connect(hostname='localhost', port=f'{QEMU_SSH_PORT}', username='user', password="1")
     client.connect(hostname='localhost', port=f'{QEMU_SSH_PORT}', username='root', password="root")
 
     sftp = client.open_sftp()
@@ -259,7 +256,6 @@ def analyze_side_effect(Config):
 
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    # client.connect(hostname='localhost', port=f'{QEMU_SSH_PORT}', username='user', password="1")
     client.connect(hostname='localhost', port=f'{QEMU_SSH_PORT}', username='root', password="root")
 
     sftp = client.open_sftp()

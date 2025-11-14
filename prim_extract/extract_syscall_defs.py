@@ -1,7 +1,3 @@
-# automatically generate syscall definitions for KotoriPlugin
-# i.e. syscall_table.h
-# for linux kernel 5.10
-
 import os
 import json
 import subprocess
@@ -18,8 +14,6 @@ def register_syscall(defarr):
         return # SYSCALL_DEFINEn itself
 
     if len(defarr) / 2 - 1 != n_arg and 'COMPAT' not in defarr[0]: 
-        # import pdb 
-        # pdb.set_trace()
         raise AttributeError("ERROR: inconsistent syscall argument number")
     
     name = defarr[1]

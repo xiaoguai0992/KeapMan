@@ -24,7 +24,8 @@ RUN apt-get update && \
     apt-get install -y vim && \
     apt install python3 git -y && \
     apt install qemu qemu-system -y && \
-    apt install python3-pip -y 
+    apt install python3-pip -y && \
+    apt install flex bison -y \
 
 RUN echo -e "\e[32m[+] Install other related tools\e[0m"
 
@@ -73,9 +74,6 @@ RUN . /root/.cargo/env && ../build.sh --python
 WORKDIR /panda/panda/python/core
 RUN python3 create_panda_datatypes.py --install
 RUN pip install -e .
-
-WORKDIR /
-RUN pip3 install code_agent
 
 CMD ["/bin/bash"]
 

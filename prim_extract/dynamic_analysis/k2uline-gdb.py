@@ -34,9 +34,6 @@ def parse_input(cfg_path):
         OUTPUT_JSON = d['output_json']
         CURRENT_TASK_OFF = d['current_task_pcpu_offset']
 
-        # print(f'[GDB] monitoring process "{POC_NAME}"')
-        # print(f'[GDB] current_task pcpu offset "{hex(CURRENT_TASK_OFF)}"')
-
         bp_n2a['alloc_site'] = d['k_alloc_addr']
         bp_n2a['free_site'] = d['k_free_addr']
 
@@ -93,9 +90,7 @@ def get_uline_of_current_callstack(breakpoint_addr):
     return None
 
 def delay_bpdelete(bp):
-    # gdb.execute("interrupt")
     bp.delete()
-    # gdb.execute("resume")
 
 obj_allocs = {}
 obj_frees = {}
@@ -117,7 +112,6 @@ class VulAllocBreakpoint(gdb.Breakpoint):
         obj = int(gdb.parse_and_eval("$rax")) & 0xFFFFFFFFFFFFFFFF
 
         obj_allocs[obj] = uline
-        # print(f'[K2UDBG] find possible alloc {hex(obj)} {uline}')
 
         return False
 
@@ -155,7 +149,6 @@ class VulFreeBreakpoint(gdb.Breakpoint):
             obj = int(gdb.parse_and_eval("$rdi")) & 0xFFFFFFFFFFFFFFFF
 
         obj_frees[obj] = uline
-        # print(f'[K2UDBG] find possible free {hex(obj)} {uline}')
 
         return False
 

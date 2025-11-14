@@ -26,8 +26,7 @@ def extract_bc(source_dir, target_dir):
                 continue
 
             source_file = os.path.join(root, file)
-            # print(f"\033[90m[.] Checking {source_file}\033[0m")
-            
+
             if not is_elf_file(source_file):
                 continue
             

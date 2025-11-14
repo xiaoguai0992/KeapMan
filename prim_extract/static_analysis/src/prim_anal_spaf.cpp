@@ -93,8 +93,6 @@ void buildPDG(SVF::LLVMModuleSet *mset, SVF::PDG *pdg, SVF::ICFG *icfg, SVF::VFG
 		if (isICFGNodeHasInst(cur))
 		{
 			const llvm::Instruction *inst = SVF::SVFUtil::cast<llvm::Instruction>(mset->getLLVMValue(cur));
-			// llvm::outs() << "--------\n";
-			// llvm::outs() << *inst << "\n";
 
 			SVF::PDGNode *node = getOrCreatePDGNode(pdg, inst);
 
@@ -255,7 +253,6 @@ bool succ_all_in(SVF::PDG *pdg, int clusterId, SVF::Set<int> &cluster)
 						{
 							if (tmp_clusterid != clusterId && cluster.find(tmp_clusterid) == cluster.end())
 							{
-								// SVF::SVFUtil::errs() << "cluster " << tmp_clusterid << " not visit.\n";
 								return false;
 							}
 						}
@@ -269,7 +266,6 @@ bool succ_all_in(SVF::PDG *pdg, int clusterId, SVF::Set<int> &cluster)
 			}
 			else if (nextClusterId != clusterId && cluster.find(nextClusterId) == cluster.end())
 			{
-				// SVF::SVFUtil::errs() << "cluster " << nextClusterId << " not visit.\n";
 				return false;
 			}
 		}
@@ -298,14 +294,12 @@ void splitFreeCluster(SVF::PDG *pdg, int free_lineno, int depDepth,
 	}
 
 	SVF::Set<int> visited;
-	// SVF::FIFOWorkList<int> worklist;
 	std::priority_queue<int> worklist;
 	visited.insert(free_lineno);
 	worklist.push(free_lineno);
 	/* put all the successors of free_lineno into visited */
 	while(!worklist.empty())
 	{
-		// int cur_clusterid = worklist.pop();
 		int cur_clusterid = worklist.top();
 		worklist.pop();
 		for (const SVF::NodeID nodeId : pdg->getNodeCluster(cur_clusterid))
@@ -329,29 +323,20 @@ void splitFreeCluster(SVF::PDG *pdg, int free_lineno, int depDepth,
 
 	while (!worklist.empty())
 	{
-		// int cur_clusterid = worklist.pop();
 		int cur_clusterid = worklist.top();
 		worklist.pop();
 		std::set<int> cur_syscall_cluster;
 		std::set<int> next_worklist;
 		
-		// SVF::SVFUtil::errs() << "Get syscall cluster " << cur_clusterid << ":\n";
 		getSyscallCluster(pdg, cur_clusterid, cur_syscall_cluster, next_worklist);
 		for (int clusterId : cur_syscall_cluster) {
-			// SVF::SVFUtil::errs() << clusterId << ", ";
 			visited.insert(clusterId);
 		}
-		// SVF::SVFUtil::errs() << "\n";
-		// SVF::SVFUtil::errs() << "Next syscall cluster ";
-		// for (int clusterId : next_worklist)
-		// 	SVF::SVFUtil::errs() << clusterId << ", ";
-		// SVF::SVFUtil::errs() << "\n";
 		
 		if (depth < depDepth
 				&& alloc_cluster.find(cur_clusterid) == alloc_cluster.end()
 				&& free_cluster.find(cur_clusterid) == free_cluster.end())
 		{
-			// SVF::SVFUtil::errs() << "Add syscall cluster at depth " << depth << "\n";
 			for (int clusterId : cur_syscall_cluster)
 			{
 				if (alloc_cluster.find(clusterId) == alloc_cluster.end()
@@ -360,7 +345,6 @@ void splitFreeCluster(SVF::PDG *pdg, int free_lineno, int depDepth,
 					free_cluster.insert(clusterId);
 				}
 			}
-			// free_cluster.insert(cur_syscall_cluster.begin(), cur_syscall_cluster.end());
 			depth ++;
 		}
 
@@ -373,10 +357,8 @@ void splitFreeCluster(SVF::PDG *pdg, int free_lineno, int depDepth,
 		for (int next_clusterid : next_worklist)
 		{
 			/* only 0-out-degree cluster will be the next cluster */
-			// SVF::SVFUtil::errs() << "succ_all_in " << next_clusterid << " ";
 			if (succ_all_in(pdg, next_clusterid, visited)) {
 				worklist.push(next_clusterid);
-				// SVF::SVFUtil::errs() << "try next " << next_clusterid << "\n";
 			}
 		}
 	}
@@ -486,8 +468,7 @@ std::string parseTypeRecursive(const llvm::DIType *type)
     if (auto *composite = llvm::dyn_cast<llvm::DICompositeType>(type)) {
         return composite->getName().str(); // struct.Foo
     }
-
-	// others
+    // others
     return type->getName().str();
 }
 
@@ -627,45 +608,6 @@ int main(int argc, char **argv)
 	{
 		output_json["prepare"].push_back(clusterId);
 	}
-
-	// std::vector<std::string> prim_names = {"setup", "prepare", "alloc", "free"};
-	// std::vector<std::set<int>*> prim_clusters = {&setup_cluster, &prepare_cluster, &alloc_cluster, &free_cluster};
-	// for (int i = 0; i < prim_names.size(); i++)
-	// {
-	// 	for (int j = i + 1; j < prim_names.size(); j++)
-	// 	{
-	// 		std::string key = "params-" + prim_names[i] + "-" + prim_names[j];
-	// 		output_json[key] = json::array();
-
-	// 		SVF::Set<const llvm::Value*> params;
-	// 		recogParams(pdg, svfg, *prim_clusters[i], *prim_clusters[j], params);
-
-	// 		for (const llvm::Value *val : params)
-	// 		{
-	// 			const llvm::Value *var = nullptr;
-	// 			if (!val->getType()->isVoidTy())
-	// 			{
-	// 				/* for instruction define a left value */
-	// 				var = val;
-	// 			}
-	// 			else if (const llvm::StoreInst *store = llvm::dyn_cast<llvm::StoreInst>(val))
-	// 			{
-	// 				/* for store instruction */
-	// 				var = store->getPointerOperand();
-	// 			}
-	// 			auto it = getVarNameAndType(var);
-	// 			llvm::errs() << prim_names[i] << " " << prim_names[j] << " " << *val << "\n";
-	// 			if (it.first != "")
-	// 			{
-	// 				llvm::errs() << it.first << " " << it.second << "\n";
-	// 				output_json[key].push_back({
-	// 					{"name", it.first},
-	// 					{"type", it.second}
-	// 				});
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	std::ofstream primitive_out(workdir + std::string("/primitive_spaf.json"));
 	primitive_out << output_json.dump(4);

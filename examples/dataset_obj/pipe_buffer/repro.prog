@@ -1,4 +1,0 @@
-pipe2(&(0x7f0000000040)={<r0=>0x0, <r1=>0x0}, 0x0)
-fcntl$setpipe(r0, 0x407, 0x9)
-close(r0)
-close(r1)

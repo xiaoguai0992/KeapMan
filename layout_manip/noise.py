@@ -957,12 +957,6 @@ def check_useful_free_obj(objname:str)->int:
     check_useful_free(alloc_addr+free_addr)
 
 
-def test():
-    #alloc_times, alloc_op_nums = check_useful_alloc([18446744071582416587, 18446744071582417105], "/mnt/hgfs/slake/exps/msg_msg_alloc.c")
-    free_times = check_useful_free([18446744071582416587, 18446744071582417105], 20, "/mnt/hgfs/slake/exps/msg_msg_free.c")
-    #check_useful_free_obj("msg_msg")
-    pass
-
 def main():
     if "-p" in sys.argv or "--prepare" in sys.argv:
         p = prepare()
@@ -978,8 +972,6 @@ def main():
         a.analysis()
     if "--clean" in sys.argv:
         clean()
-    if "-t" in sys.argv: 
-        test()  
     if "--one" in sys.argv:
         for i in range(len(sys.argv)-1):
             if sys.argv[i] == "--one":

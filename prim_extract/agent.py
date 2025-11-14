@@ -321,10 +321,9 @@ class Agent:
         content = response.choices[0].message.content
         return content
 
-API_URL = 'https://api.siliconflow.cn/v1'
-API_KEY = 'sk-mifsihmswzonqpmoptabxgclcsyywzybyggiwretqavjkwoi'
-# MODEL = 'Qwen/Qwen3-8B'
-MODEL = 'Qwen/Qwen3-32B'
+API_URL = ''
+API_KEY = ''
+MODEL = ''
 
 def generate_primitive_h_sa(c_prog_path, primitive_path, sideeffect_path):
     agent = Agent(MODEL, url=API_URL, api_key=API_KEY)
@@ -378,8 +377,6 @@ if __name__ == '__main__':
     case_name = sys.argv[2]
 
     workspace_root_dir = os.getenv("WORKSPACE_ROOT_DIR")
-    # case_name = 'pipe_buffer'
-    # case_name = 'drm_property_blob'
 
     if mode == 'sa':
         primitive_path = os.path.join(workspace_root_dir, case_name, 'primitive_sa_remap.json')
