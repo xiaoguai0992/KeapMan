@@ -56,26 +56,26 @@ WORKDIR /
 RUN git clone https://github.com/panda-re/panda.git 
 
 WORKDIR /panda/
-RUN    apt install --no-install-recommends $(grep -v '^#' ./panda/dependencies/ubuntu_22.04_base.txt | tr '\n' ' ') -y
-RUN    apt install --no-install-recommends $(grep -v '^#' ./panda/dependencies/ubuntu_22.04_build.txt | tr '\n' ' ') -y
-RUN    mkdir -p build && cd build 
-RUN    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-RUN    . ~/.bashrc 
-RUN    . /root/.cargo/env
-RUN    apt-get install libcapstone-dev -y 
+RUN apt install --no-install-recommends $(grep -v '^#' ./panda/dependencies/ubuntu_22.04_base.txt | tr '\n' ' ') -y
+RUN apt install --no-install-recommends $(grep -v '^#' ./panda/dependencies/ubuntu_22.04_build.txt | tr '\n' ' ') -y
+RUN mkdir -p build && cd build 
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN . ~/.bashrc 
+RUN . /root/.cargo/env
+RUN apt-get install libcapstone-dev -y 
 
 WORKDIR /panda/build/
-RUN    python3 -m pip install --user -U pip wheel build "setuptools>=80" "setuptools-scm>=8"
-RUN    . /root/.cargo/env && ../build.sh x86_64-softmmu
-RUN     . /root/.cargo/env && ../build.sh --python
+RUN python3 -m pip install --user -U pip wheel build "setuptools>=80" "setuptools-scm>=8"
+RUN . /root/.cargo/env && ../build.sh x86_64-softmmu
+RUN . /root/.cargo/env && ../build.sh --python
 
 
 WORKDIR /panda/panda/python/core
 RUN python3 create_panda_datatypes.py --install
-RUN      pip install -e .
+RUN pip install -e .
 
 WORKDIR /
-RUN   pip3 install code_agent
+RUN pip3 install code_agent
 
 CMD ["/bin/bash"]
 
