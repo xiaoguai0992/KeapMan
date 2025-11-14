@@ -7,17 +7,30 @@ Automatic exploit generation is a promising technique for vulnerability assessme
 ## Project Structure
 
 ```shell
-
-
-
-
+├── Dockerfile
+├── env
+├── examples
+│   ├── CVE-2021-42008_ELOISE
+│   ├── dataset_obj
+│   ├── objmeasure
+├── layout_manip
+├── prim_extract
+└── README.md
 ```
 
-# Prepare environment variables #
+# Prepare  #
 
 First of all, you should clone our project to a directory, such as /work.
 
-Then you need to prepare the corresponding directories based on the env file in the KeapMan directory, and modify the paths in the env file to your actual paths. This includes needing to prepare the Linux source code, bc files, etc. yourself.
+Then you need to prepare the corresponding directories based on the env file in the KeapMan directory, and modify the paths in the env file to your actual paths. This includes needing to prepare the **Linux source code**, **bc files**, etc. yourself.
+
+Don't forget to place your compiled **bzImage and vmlinux** files in the following directory:
+```shell
+/work/KeapMan/examples/CVE-2021-42008_ELOISE/input/ # both bzImage and vmlinux
+/work/KeapMan/examples/CVE-2021-42008_ELOISE/sym/   # only vmlinux
+/work/KeapMan/examples/objmeasure/input/            # both bzImage and vmlinux
+/work/KeapMan/examples/objmeasure/sym/              # only vmlinux
+```
 
 Then source the modified env file:
 ```shell
@@ -170,10 +183,10 @@ int main(){
 
 ## measure memory operations
 
-Enter your working directory and run the following command:
+Enter your working directory and run the following command: (you can test in )
 
 ```shell
-python3 /path/to/KeapMan/noise.py -p -n1 -n2
+python3 $KEAPMAN_PATH/layout_manip/noise.py -p -n1 -n2
 ```
 
 ## Automatic Exploit Generation
@@ -181,24 +194,22 @@ python3 /path/to/KeapMan/noise.py -p -n1 -n2
 Then run the following command in your workdir:
 
 ```shell
-python3 /path/to/KeapMan/fengshui.py
+python3 $KEAPMAN_PATH/layout_manip/fengshui.py
 ```
 
-# Example
+## Example 
 
 We take the ELOISE method of CVE-2021-42008 as an example. You can run the following command to test the effect:
 
 ```shell
 # run in CVE-2021-42008_ELOISE
 
-# get primitive
-
 
 # measure memory operations
-python3 ../../noise.py -p -n2
+python3 $KEAPMAN_PATH/layout_manip/noise.py -p -n2
 
 # heap layout
-python3 ../../fengshui.py
+python3 $KEAPMAN_PATH/layout_manip/fengshui.py
 ```
 
 The final output might look like this:
