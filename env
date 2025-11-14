@@ -1,0 +1,12 @@
+export KEAPMAN_PATH=/work/KeapMan 
+export KERNEL_DIR=/work/files/linux/
+export WORKSPACE_ROOT_DIR=/work/files/workspace
+export DATASET_ROOT_DIR=$KEAPMAN_PATH/examples/dataset_obj
+export SVF_ROOT_DIR=/SVF
+export OBJMEASURE_ROOT_DIR=$KEAPMAN_PATH/examples/objmeasure
+export IMAGE_PATH=/work/files/bullseye.img
+export PY_ALLOCCHECK=$KEAPMAN_PATH/layout_manip/check_alloc.py
+export PY_FREECHECK=$KEAPMAN_PATH/layout_manip/check_free.py
+export LINUX_BC_DIR=/work/files/linux-bc/
+export PANDA_PATH=/panda
+export SYSCALL_DEFS=/work/files/syscall_defs.json

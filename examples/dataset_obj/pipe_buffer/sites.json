@@ -1,0 +1,4 @@
+{
+    "alloc": "fs/pipe.c:1263 pipe_resize_ring",
+    "free": "fs/pipe.c:848 free_pipe_info"
+}
